@@ -1,0 +1,20 @@
+/* Styling for Play Store UI */
+.nav-btn.active {
+  background-color: rgba(79, 70, 229, 0.15);
+  color: #818cf8;
+  border-left: 3px solid #6366f1;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #0f172a;
+}
+::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}

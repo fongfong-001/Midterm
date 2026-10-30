@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Store - App</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-[#0f172a] text-slate-100 min-h-screen flex selection:bg-indigo-500 selection:text-white">
+
+  <!-- Sidebar -->
+  <aside class="w-64 bg-[#1e293b] border-r border-slate-700/60 flex flex-col p-5 shrink-0 select-none">
+    <div class="flex items-center gap-3 mb-8 px-2">
+      <div class="w-10 h-10 bg-gradient-to-tr from-indigo-600 via-indigo-500 to-cyan-400 rounded-xl flex items-center justify-center font-black text-2xl text-white shadow-lg shadow-indigo-500/30">S</div>
+      <div>
+        <span class="text-xl font-bold tracking-wide text-white block leading-tight">Store</span>
+        <span class="text-[10px] uppercase font-semibold text-indigo-400 tracking-wider">Marketplace</span>
+      </div>
+    </div>
+
+    <nav class="space-y-1.5 flex-1">
+      <button onclick="setTab('all')" class="nav-btn active w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-left text-sm font-semibold transition-all duration-200 hover:bg-slate-700/50" data-tab="all">
+        <span class="text-lg">🏠</span> Home
+      </button>
+      <button onclick="setTab('apps')" class="nav-btn w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-left text-sm font-semibold transition-all duration-200 hover:bg-slate-700/50 text-slate-400" data-tab="apps">
+        <span class="text-lg">📱</span> Apps
+      </button>
+      <button onclick="setTab('games')" class="nav-btn w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-left text-sm font-semibold transition-all duration-200 hover:bg-slate-700/50 text-slate-400" data-tab="games">
+        <span class="text-lg">🎮</span> Games
+      </button>
+      <button onclick="setTab('library')" class="nav-btn w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-left text-sm font-semibold transition-all duration-200 hover:bg-slate-700/50 text-slate-400" data-tab="library">
+        <span class="text-lg">📦</span> Library
+        <span id="installed-badge" class="ml-auto bg-indigo-500/20 text-indigo-400 px-2 py-0.5 rounded-full text-xs font-bold border border-indigo-500/30">0</span>
+      </button>
+    </nav>
+  </aside>
+
+  <!-- Main Content Area -->
+  <main class="flex-1 flex flex-col h-screen overflow-hidden bg-[#0f172a]">
+    <!-- Top Bar -->
+    <header class="h-16 border-b border-slate-700/60 bg-[#1e293b]/80 backdrop-blur-md flex items-center justify-between px-8 z-10 shrink-0">
+      <div class="relative w-96">
+        <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 text-sm">🔍</span>
+        <input id="search-input" type="text" placeholder="Search apps, games, developers..." 
+               class="w-full bg-slate-900/80 text-sm rounded-xl pl-10 pr-4 py-2 border border-slate-700/80 text-slate-200 placeholder-slate-400 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition">
+      </div>
+
+      <!-- Auth Action Section -->
+      <div id="user-section">
+        <button onclick="openAuthModal('login')" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs rounded-xl transition">
+          Login / Register
+        </button>
+      </div>
+    </header>
+
+    <!-- Scrollable Body -->
+    <div class="flex-1 overflow-y-auto p-8 space-y-8">
+      
+      <!-- Featured Banner -->
+      <section id="hero-section" class="relative rounded-2xl overflow-hidden border border-slate-700/80 bg-slate-800 shadow-xl">
+        <div id="hero-banner" class="h-64 sm:h-72 bg-cover bg-center relative flex items-end p-8" style="background-image: url('https://images.unsplash.com/photo-1542751371-adc38448a05e?w=1200&q=80')">
+          <div class="absolute inset-0 bg-gradient-to-t from-[#0f172a] via-[#0f172a]/60 to-transparent"></div>
+          <div class="relative z-10 max-w-xl">
+            <span class="inline-block bg-indigo-600 text-white text-[11px] font-bold tracking-wider uppercase px-2.5 py-1 rounded-md mb-2">Featured Game</span>
+            <h1 class="text-3xl font-black text-white mb-1">CyberRunner 2077</h1>
+            <p class="text-sm text-slate-300 mb-4 line-clamp-2">High-speed futuristic parkour action across neon skyscrapers. Experience the ultimate cyber runner today.</p>
+            <button onclick="openModal('app-1')" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold text-sm transition shadow-lg shadow-indigo-600/30 flex items-center gap-2">
+              <span>View Game</span> ➔
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section Title & Grid -->
+      <section>
+        <div class="flex items-center justify-between mb-5">
+          <h2 class="text-xl font-bold text-white tracking-tight" id="section-title">Recommended Apps & Games</h2>
+        </div>
+        <div id="app-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5"></div>
+      </section>
+
+      <!-- Top Charts -->
+      <section id="top-charts-section">
+        <h2 class="text-xl font-bold text-white tracking-tight mb-5">Top Charts</h2>
+        <div id="top-charts-list" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Login/Register Modal -->
+  <div id="auth-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+    <div class="bg-[#1e293b] border border-slate-700 rounded-2xl w-full max-w-md p-6 shadow-2xl relative">
+      <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-sm font-bold">✕</button>
+      <h3 id="auth-title" class="text-xl font-bold text-white mb-4">Login to Store</h3>
+      <div id="auth-error" class="hidden mb-3 p-2 bg-rose-500/20 border border-rose-500/40 text-rose-300 text-xs rounded-lg"></div>
+      <form id="auth-form" onsubmit="handleAuthSubmit(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-slate-300 mb-1">Username</label>
+          <input type="text" id="auth-username" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-indigo-500">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-300 mb-1">Password</label>
+          <input type="password" id="auth-password" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-indigo-500">
+        </div>
+        <button type="submit" id="auth-submit-btn" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl transition text-sm">Login</button>
+      </form>
+      <p class="mt-4 text-xs text-center text-slate-400">
+        <span id="auth-toggle-text">Don't have an account?</span>
+        <button onclick="toggleAuthMode()" id="auth-toggle-btn" class="text-indigo-400 font-bold hover:underline ml-1">Create Account</button>
+      </p>
+    </div>
+  </div>
+
+  <!-- App Detail Modal -->
+  <div id="app-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50 transition-opacity">
+    <div class="bg-[#1e293b] border border-slate-700/80 rounded-2xl w-full max-w-2xl overflow-hidden shadow-2xl relative max-h-[90vh] flex flex-col">
+      <button onclick="closeModal()" class="absolute top-4 right-4 bg-slate-800/80 hover:bg-slate-700 text-slate-300 w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold z-10 transition">✕</button>
+      <div id="modal-content" class="p-6 overflow-y-auto"></div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
